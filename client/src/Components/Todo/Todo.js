@@ -7,16 +7,15 @@ import Spinner from "./spinner.gif";
 import useFetcher from "../../hooks/useFetcher";
 import usePagination from "../../hooks/usePagination";
 import {useNavigate} from "react-router";
-import useSort from "../../hooks/useSort";
+import {useState} from "react";
 
 const Todo = () => {
-    const { isLoading, isError } = useFetcher();
+    const [sortParam, setSortParam] = useState('username')
+    const { isLoading, isError } = useFetcher(sortParam);
 
     const navigate = useNavigate()
 
     const {list} = useSelector((state) => state.todo);
-
-    const {prop, onChangeProp, sortedList} = useSort(list)
 
     const {changePage, pageCount, range, itemCountInOnePage} = usePagination(list.length);
 
@@ -44,14 +43,14 @@ const Todo = () => {
         </header>
         <Select
             label="Sort by"
-            value={prop}
-            onChange={(e) => onChangeProp(e.target.value)}
+            value={sortParam}
+            onChange={(e) => setSortParam(e.target.value)}
         >
             <MenuItem value={'username'}>username</MenuItem>
             <MenuItem value={'email'}>email</MenuItem>
         </Select>
         <div className="wrapper">
-            {sortedList.slice(...range).map((item) => {
+            {list.slice(...range).map((item) => {
                 const { email, username, id, content, isDone } = item;
                 return(<Item email={email} username={username} content={content} id={id} key={id} isDone={isDone}/>)
             })}

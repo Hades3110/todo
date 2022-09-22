@@ -7,7 +7,15 @@ class Todo {
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const data = await todo.getAll();
-            res.status(StatusCode.SuccessRequest).json(data);
+            const sortParam = req.query.sort;
+            if(sortParam === 'email' || sortParam === 'username'){
+                const sortedData = data.sort((a,b) => {
+                    return (a[sortParam] > b[sortParam]) ? 1 : -1
+                });
+                res.status(StatusCode.SuccessRequest).json(sortedData);
+            }else {
+                res.status(StatusCode.SuccessRequest).json(data);
+            }
         } catch (err) {
             next(HttpErr.internalServerError(ExceptionMessages.INTERNAL));
         }

@@ -2,8 +2,8 @@ import axios from "axios";
 
 const API_BASE = 'http://localhost:5444/';
 
-export const getAll = async () => {
-    return await axios.get(`${API_BASE}todo`);
+export const getAll = async (sortPatam) => {
+    return await axios.get(`${API_BASE}todo?sort=${sortPatam}`);
 }
 
 export const createTodo = async (todo) => {
